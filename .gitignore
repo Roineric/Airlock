@@ -16,6 +16,7 @@ htmlcov/
 coverage.xml
 .idea/
 .vscode/
+refs/
 .DS_Store
 Thumbs.db
 Desktop.ini
@@ -25,3 +26,4 @@ Desktop.ini
 *.pfx
 *.crt
 *.cer
+AGENTS.md

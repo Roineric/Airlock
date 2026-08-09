@@ -51,6 +51,11 @@ Run the automated tests with:
 
 Tests use fake process objects and must never terminate real user processes.
 
+## Documentation
+
+- [Process-matching safety review](docs/PROCESS_MATCHING_SAFETY_REVIEW.md)
+- [Program flow walkthrough](docs/PROGRAM_FLOW_WALKTHROUGH.md)
+
 ## Build a release executable
 
 The authoritative build method is the PyInstaller CLI. PyInstaller is pinned in
