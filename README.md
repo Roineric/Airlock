@@ -49,6 +49,19 @@ Run the automated tests with:
 .\.venv\Scripts\python.exe -m pytest
 ```
 
+If pytest reports `PermissionError` for its temporary directory on Windows, use
+a repository-local directory owned by the current PowerShell session:
+
+```powershell
+$airlockTestTemp = ".\.pytest_temp_user_$PID"
+
+.\.venv\Scripts\python.exe -m pytest `
+  --basetemp $airlockTestTemp `
+  -p no:cacheprovider
+```
+
+Directories beginning with `.pytest_temp` are ignored by Git.
+
 Tests use fake process objects and must never terminate real user processes.
 
 ## Documentation
