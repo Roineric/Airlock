@@ -6,7 +6,7 @@ Airlock is a small Windows 10 desktop application that closes selected distracti
 
 ## Project Structure & Module Organization
 
-The repository does not yet contain application code. As it grows, use a straightforward layout:
+The repository contains a working MVP. Keep its straightforward layout:
 
 - `src/airlock/`: GUI, process-control, and settings modules.
 - `tests/`: tests mirroring module names, such as `test_processes.py`.
@@ -37,7 +37,7 @@ Name tests `test_*.py` and test functions `test_<behavior>`. Mock process access
 
 ## Commits & Pull Requests
 
-There is no Git history yet, so use concise imperative commits such as `Add exact-name process matching`. Create checkpoints at meaningful, working milestones. Pull requests should explain the user-visible change, list tests run, link relevant issues, and include screenshots for GUI changes. Keep changes small; do not rewrite unrelated code.
+Use concise imperative commits such as `Add exact-name process matching`. Create checkpoints at meaningful, working milestones. Pull requests should explain the user-visible change, list tests run, link relevant issues, and include screenshots for GUI changes. Keep changes small; do not rewrite unrelated code.
 
 ## Contributor Workflow
 
@@ -45,19 +45,27 @@ Before substantial work, inspect the repository, state the intended small change
 
 ## Source documents
 
-Use these documents as project context:
+Use these numbered documents as core project context:
 
-- docs/PROJECT_HOME.md
-- docs/SCOPE_AND_VISION.md
-- docs/PROCESS_TARGETS.md
-- docs/TECH_NOTES.md
-- docs/MVP_BUILD_PLAN.md
+- `docs/00_Project_Home.md`
+- `docs/01_Scope_and_Vision.md`
+- `docs/02_Process_Targets.md`
+- `docs/03_Tech_Notes.md`
+
+Use these documents for the current implementation state and completed safety
+work:
+
+- `docs/AIRLOCK_EXPLANATION.md`
+- `docs/PROGRAM_FLOW_WALKTHROUGH.md`
+- `docs/PROCESS_MATCHING_SAFETY_REVIEW.md`
+- the most recent dated `docs/HANDOFF_*.md`
 
 Priority order:
 
 1. AGENTS.md defines the current weekend MVP and overrides older plans.
-2. SCOPE_AND_VISION.md defines the intended product boundaries.
-3. MVP_BUILD_PLAN.md may guide implementation, but simplify it whenever necessary to produce a working MVP.
-4. Other documents are background context only.
+2. `docs/01_Scope_and_Vision.md` defines the intended product boundaries.
+3. The latest dated handoff defines the current stopping point but does not
+   override product scope or safety requirements.
+4. Other documents are implementation reference or background context only.
 
 Do not implement future phases unless explicitly requested.

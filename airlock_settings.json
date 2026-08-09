@@ -2,10 +2,8 @@
   "enabled_targets": [
     "Discord.exe",
     "Telegram.exe",
-    "WhatsApp.Root.exe",
     "RingCentral.exe",
     "EpicGamesLauncher.exe",
     "upc.exe"
   ]
 }
-

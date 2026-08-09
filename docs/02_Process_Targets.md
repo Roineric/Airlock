@@ -10,15 +10,13 @@ That means every target must be verified on the actual machine.
 
 ---
 
-## Candidate Target Apps  
-Initial candidates:  
-- Discord  
-- Telegram  
-- WhatsApp
-- RingCentral  
-- Epic Games Store  
+## Current Enabled Targets
+
+- Discord
+- Telegram
+- RingCentral
+- Epic Games Launcher
 - Ubisoft Connect
-- Steam (optional)  
 
 Possible future additions:
 - Slack
@@ -30,15 +28,15 @@ Possible future additions:
 
 ## Verification Table
 
-| App | Expected Process Name | Confirmed? | Close Cleanly? | Force Needed? | Notes |
-|---|---|---:|---:|---:|---|
-| Discord | Discord.exe | No | TBD | TBD | verify on machine |
-| Telegram | Telegram.exe | No | TBD | TBD | verify on machine |
-| WhatsApp | TBD | No | TBD | TBD | verify exact process name on machine |
-| RingCentral | TBD | No | TBD | TBD | likely needs exact inspection |
-| Steam | steam.exe | No | TBD | TBD | optional target |
-| Epic Games Store | EpicGamesLauncher.exe | No | TBD | TBD | verify on machine |
-| Ubisoft Connect | UbisoftConnect.exe | No | TBD | TBD | may also expose helper/background processes |
+| App | Exact Process Name | Confirmed? | Status | Notes |
+|---|---|---:|---|---|
+| Discord | Discord.exe | Yes | Enabled | Exact-name target |
+| Telegram | Telegram.exe | Yes | Enabled | Exact-name target |
+| RingCentral | RingCentral.exe | Yes | Enabled | Exact-name target |
+| Epic Games Launcher | EpicGamesLauncher.exe | Yes | Enabled | Exact-name target |
+| Ubisoft Connect | upc.exe | Yes | Enabled | Exact-name target |
+| WhatsApp | WhatsApp.Root.exe | Yes | Excluded | Shutdown warning observed |
+| Steam | steam.exe | No | Future option | Verify before enabling |
 
 ---
 
@@ -46,7 +44,7 @@ Possible future additions:
 
 ### PowerShell  
 ```powershell  
-Get-Process | Sort-Object ProcessName | Select-Object ProcessName```
+Get-Process | Sort-Object ProcessName | Select-Object ProcessName
 ```
 
 ### Command Prompt
@@ -113,13 +111,30 @@ Potential exclusions:
 
 - Airlock is intended to target background messengers / communication apps first.
 - Steam is considered optional rather than core.
-- Exact process names must be confirmed before coding against them.
+- Exact enabled process names are recorded in `airlock_settings.json`.
+- WhatsApp (`WhatsApp.Root.exe`) is temporarily excluded from enabled targets.
+
+### WhatsApp safety note — 2026-08-09
+
+After Airlock closed `WhatsApp.Root.exe`, WhatsApp displayed an error when it was
+launched again. This suggests that WhatsApp experienced the current forced
+termination fallback as an unclean shutdown.
+
+Until the fallback is improved, WhatsApp must remain absent from
+`airlock_settings.json`. Reconsider enabling it only after Airlock can:
+
+1. allow a longer graceful-close period;
+2. report processes that remain open instead of automatically forcing them; and
+3. request a separate user confirmation before force termination.
+
+The exact WhatsApp error text was not captured, so this note records the observed
+behavior without claiming that application data was corrupted.
 
 ---
 
 ## Follow-Up Tasks
 
-- confirm real process names on the machine
-- test each app for shutdown behavior
-- note edge cases
-- update this file as ground truth for implementation
+- improve the forced-fallback confirmation flow;
+- retest enabled targets after that change;
+- reconsider WhatsApp only after it closes cleanly; and
+- record new process-name or relaunch edge cases here.

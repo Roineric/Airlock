@@ -127,3 +127,24 @@ Result: **Passed**.
 
 All three requested cases passed. The only terminated process was the disposable
 probe created for this test. No unrelated process was targeted or terminated.
+
+## Friendly application-name display — 2026-08-09
+
+The app-name display feature was tested without opening a Tkinter window,
+enumerating host processes, or terminating any process. Tests used inert
+`ProcessMatch` objects and mocked process discovery and confirmation dialogs.
+
+Targeted checks verified:
+
+- known executable names map to the intended friendly application names;
+- matching is case-insensitive for display lookup;
+- unknown targets hide only their final `.exe` suffix;
+- preview rows show friendly names for running and non-running targets;
+- confirmation text shows friendly names and PIDs without exposing `.exe` names;
+- completion results show friendly names instead of executable filenames.
+
+Targeted result: **4 passed**.
+
+The complete automated suite then passed: **23 tests passed in 0.08 seconds**.
+Python compilation checks for `src/` and `tests/` also passed, and
+`git diff --check` found no whitespace errors in the feature files.

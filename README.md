@@ -9,28 +9,33 @@ then closes only the exact processes shown.
 - Minimal Tkinter desktop interface
 - JSON-configured executable targets
 - Exact, case-insensitive executable-name matching
-- Running-process and PID preview
-- Confirmation before closure
+- Friendly application names and running status in the preview
+- Exact process IDs shown in the confirmation dialog
 - Graceful Windows `WM_CLOSE` request before forced fallback
 - Clear `Closed`, `Not running`, and `Failed` results
+- Responsive `Ending Workday…` and `Workday Ended ✓` button states
 - Protected Windows-process denylist and PID-identity checks
 - Unit tests that never terminate real processes
 
-## Installation
+## Install from a fresh clone
 
-Airlock requires Windows and Python 3.11 or newer. From the repository root in
-PowerShell:
+Airlock requires Windows and Python 3.11 or newer. Run these commands from the
+repository root in PowerShell:
 
 ```powershell
 py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pip install -e .
 ```
+
+`requirements.txt` contains runtime dependencies. `requirements-dev.txt` adds
+the test and pinned build tools used by contributors.
 
 Edit `airlock_settings.json` to select targets. The file must contain only an
 `enabled_targets` list of complete executable names such as `Discord.exe`.
 
-## Run from source
+## Run and test from source
 
 Run from the repository root so Airlock can find `airlock_settings.json`:
 
@@ -38,28 +43,47 @@ Run from the repository root so Airlock can find `airlock_settings.json`:
 .\.venv\Scripts\python.exe -m airlock
 ```
 
-Run the tests with:
+Run the automated tests with:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-## Build an executable
+Tests use fake process objects and must never terminate real user processes.
 
-Install PyInstaller in the virtual environment, then create a single windowed
-executable:
+## Build a release executable
+
+The authoritative build method is the PyInstaller CLI. PyInstaller is pinned in
+`requirements-dev.txt`; generated `.spec`, `build/`, and `dist/` files are not
+committed.
+
+From the repository root:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install pyinstaller
-.\.venv\Scripts\python.exe -m PyInstaller --onefile --windowed --name Airlock --paths src src\airlock\__main__.py
-Copy-Item airlock_settings.json dist\airlock_settings.json
+.\.venv\Scripts\python.exe -m PyInstaller `
+  --noconfirm --clean --onefile --windowed `
+  --name Airlock --paths src `
+  src\airlock\__main__.py
+
+Copy-Item airlock_settings.json dist\airlock_settings.json -Force
 ```
 
-The output is `dist\Airlock.exe`. Keep `airlock_settings.json` beside it and
-launch it with that directory as the working directory. PyInstaller builds are
-platform-specific, so build the Windows executable on Windows. See the
-[official PyInstaller usage guide](https://pyinstaller.org/en/stable/usage.html)
-for other bundle options.
+Verify the release files before publishing:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest
+Get-FileHash dist\Airlock.exe -Algorithm SHA256
+Get-FileHash dist\airlock_settings.json -Algorithm SHA256
+```
+
+Publish `dist\Airlock.exe` and `dist\airlock_settings.json` as GitHub Release
+assets. Record their SHA-256 hashes in the release notes so downloaded files can
+be checked. Do not commit the generated `dist/` directory.
+
+The executable and settings file must remain beside each other. Airlock resolves
+settings from its current working directory, so launch it with the release
+directory as the working directory. PyInstaller builds are platform-specific;
+build the Windows executable on Windows.
 
 ## Safety behavior
 
@@ -82,5 +106,8 @@ timeouts are reported without crashing.
 - A save prompt still open after five seconds may be force-terminated, risking
   unsaved data
 - Apps with differently named helpers may remain running or relaunch themselves
-- Closure waits run on the GUI thread and may temporarily freeze the window
 - The executable is unsigned and may trigger Windows security warnings
+
+## License
+
+Airlock is available under the [MIT License](LICENSE).
