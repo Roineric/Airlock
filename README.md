@@ -69,39 +69,31 @@ Tests use fake process objects and must never terminate real user processes.
 - [Process-matching safety review](docs/PROCESS_MATCHING_SAFETY_REVIEW.md)
 - [Program flow walkthrough](docs/PROGRAM_FLOW_WALKTHROUGH.md)
 
-## Build a release executable
+## Download and run the Windows release
 
-The authoritative build method is the PyInstaller CLI. PyInstaller is pinned in
-`requirements-dev.txt`; generated `.spec`, `build/`, and `dist/` files are not
-committed.
+You do not need Python to use the release version of Airlock.
 
-From the repository root:
+1. Open the [latest Airlock release](https://github.com/Roineric/Airlock/releases/latest).
+2. Download both `Airlock.exe` and `airlock_settings.json` into the same folder.
+3. Open `airlock_settings.json` in Notepad and list the applications you want
+   Airlock to close. Use each application's complete executable name, such as
+   `Discord.exe`.
+4. Save the settings file, then double-click `Airlock.exe` from that folder.
 
-```powershell
-.\.venv\Scripts\python.exe -m PyInstaller `
-  --noconfirm --clean --onefile --windowed `
-  --name Airlock --paths src `
-  src\airlock\__main__.py
+Keep `Airlock.exe` and `airlock_settings.json` together. Airlock reads its list
+of applications from the settings file each time it starts.
 
-Copy-Item airlock_settings.json dist\airlock_settings.json -Force
-```
-
-Verify the release files before publishing:
+The release notes include SHA-256 hashes that you can use to check that the
+downloads are unchanged. In PowerShell, run:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest
-Get-FileHash dist\Airlock.exe -Algorithm SHA256
-Get-FileHash dist\airlock_settings.json -Algorithm SHA256
+Get-FileHash .\Airlock.exe -Algorithm SHA256
+Get-FileHash .\airlock_settings.json -Algorithm SHA256
 ```
 
-Publish `dist\Airlock.exe` and `dist\airlock_settings.json` as GitHub Release
-assets. Record their SHA-256 hashes in the release notes so downloaded files can
-be checked. Do not commit the generated `dist/` directory.
-
-The executable and settings file must remain beside each other. Airlock resolves
-settings from its current working directory, so launch it with the release
-directory as the working directory. PyInstaller builds are platform-specific;
-build the Windows executable on Windows.
+Compare the displayed hashes with those in the release notes. Because Airlock
+is not digitally signed, Windows may show a security warning the first time you
+open it.
 
 ## Safety behavior
 
